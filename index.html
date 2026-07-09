@@ -1,0 +1,982 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+.om-root {
+  --bg: #1b1e22;
+  --panel: #24282d;
+  --panel-2: #2a2f35;
+  --line: #3a4149;
+  --line-soft: #333941;
+  --text: #eae7e0;
+  --muted: #8d939b;
+  --accent: #ff6a1f;
+  --accent-dim: #7a3d1c;
+  --blue: #6f93ba;
+  --blue-dim: #2c3b4d;
+  --good: #6fae7e;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 28px 20px 60px;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+.om-root * { box-sizing: border-box; }
+
+.om-header {
+  max-width: 1120px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.om-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.om-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 4px 0 0;
+}
+.om-title span { color: var(--accent); }
+.om-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.om-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .om-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- LEFT: intake ---- */
+.om-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 20px;
+}
+.om-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.om-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.om-dropzone {
+  position: relative;
+  border: 1px dashed var(--line-soft);
+  border-radius: 2px;
+  padding: 28px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  background: var(--panel-2);
+}
+.om-dropzone:hover, .om-dropzone.drag { border-color: var(--accent); background: #2c2420; }
+.om-corner { position: absolute; width: 14px; height: 14px; border-color: var(--muted); }
+.om-corner.tl { top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid; }
+.om-corner.tr { top: 6px; right: 6px; border-top: 2px solid; border-right: 2px solid; }
+.om-corner.bl { bottom: 6px; left: 6px; border-bottom: 2px solid; border-left: 2px solid; }
+.om-corner.br { bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid; }
+.om-dropzone.drag .om-corner { border-color: var(--accent); }
+
+.om-dz-icon { font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--muted); margin-bottom: 8px; }
+.om-dz-text { font-size: 13.5px; color: var(--text); margin-bottom: 4px; }
+.om-dz-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); }
+
+.om-preview { width: 100%; max-height: 180px; object-fit: contain; border-radius: 2px; background: #111; display: block; margin: 0 auto; }
+
+.om-input-file { display: none; }
+
+.om-field {
+  width: 100%;
+  margin-top: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 64px;
+}
+.om-field:focus { outline: none; border-color: var(--accent); }
+.om-field::placeholder { color: var(--muted); }
+
+.om-btn {
+  width: 100%;
+  margin-top: 14px;
+  background: var(--accent);
+  color: #1b1e22;
+  border: none;
+  border-radius: 2px;
+  padding: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.om-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.om-btn:disabled { background: var(--line-soft); color: var(--muted); cursor: not-allowed; }
+
+.om-btn-ghost {
+  width: 100%;
+  margin-top: 10px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.om-btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+.om-log {
+  margin-top: 16px;
+  background: #16181b;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 12px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--good);
+  min-height: 100px;
+  line-height: 1.7;
+}
+.om-log .dim { color: var(--muted); }
+.om-cursor { display: inline-block; width: 6px; height: 11px; background: var(--good); animation: om-blink 1s step-end infinite; vertical-align: -1px; margin-left: 2px; }
+@keyframes om-blink { 50% { opacity: 0; } }
+
+.om-error { color: #e08585; font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-top: 12px; line-height: 1.6; }
+
+/* ---- RIGHT: ticket ---- */
+.om-ticket {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 26px 26px 30px;
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+.om-ticket-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  color: var(--muted);
+  text-align: center;
+  gap: 10px;
+}
+.om-ticket-empty .big { font-family: 'Oswald', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--line-soft); }
+.om-ticket-empty .small { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+
+.om-stamp {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  border: 3px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 4px;
+  transform: rotate(-9deg) scale(1);
+  animation: om-stamp-in 0.35s cubic-bezier(.2,1.6,.4,1);
+  background: rgba(255,106,31,0.06);
+}
+@keyframes om-stamp-in {
+  0% { transform: rotate(-9deg) scale(2.2); opacity: 0; }
+  70% { opacity: 1; }
+  100% { transform: rotate(-9deg) scale(1); opacity: 1; }
+}
+
+.om-ticket-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  padding-right: 150px;
+}
+.om-ticket-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+.om-ticket-project { font-family: 'Oswald', sans-serif; font-size: 21px; text-transform: uppercase; margin: 4px 0 0; }
+.om-ticket-desc { font-size: 13px; color: var(--muted); margin-top: 6px; max-width: 60ch; }
+
+.om-block { margin-bottom: 26px; }
+.om-block:last-child { margin-bottom: 0; }
+
+.om-blueprint {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, var(--blue-dim) 19px, var(--blue-dim) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, var(--blue-dim) 19px, var(--blue-dim) 20px),
+    #1a2530;
+  border: 1px solid var(--blue-dim);
+  border-radius: 2px;
+  padding: 10px;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+.om-blueprint svg { width: 100%; max-width: 340px; height: auto; }
+
+table.om-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.om-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  padding: 6px 8px;
+}
+table.om-table td { padding: 8px; border-bottom: 1px solid var(--line-soft); }
+table.om-table td.num, table.om-table th.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+
+.om-totals { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--muted); }
+.om-totals .om-final { font-size: 20px; color: var(--accent); font-weight: 700; margin-top: 6px; }
+
+.om-timeline { display: flex; align-items: stretch; gap: 3px; margin-top: 6px; }
+.om-tl-seg { background: var(--panel-2); border: 1px solid var(--line); border-radius: 2px; padding: 8px 6px; text-align: center; }
+.om-tl-seg .name { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.om-tl-seg .days { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text); margin-top: 3px; }
+.om-tl-total { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 8px; }
+.om-tl-total b { color: var(--accent); }
+
+.om-proposal { background: var(--panel-2); border-left: 3px solid var(--accent); padding: 16px 18px; font-size: 13.5px; line-height: 1.75; color: #d8d5ce; }
+.om-proposal p { margin: 0 0 10px; }
+.om-proposal p:last-child { margin-bottom: 0; }
+
+.om-footnote { margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* ---- file (pdf) preview card ---- */
+.om-file-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 10px 12px;
+  text-align: left;
+}
+.om-file-card .ic { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); border: 1px solid var(--accent-dim); border-radius: 2px; padding: 4px 6px; }
+.om-file-card .nm { font-size: 12.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- review banner + editable table ---- */
+.om-review-banner {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--blue);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+.om-review-hint { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
+
+.om-in {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  padding: 5px 6px;
+  border-radius: 2px;
+  width: 100%;
+}
+.om-in:focus { outline: none; border-color: var(--accent); }
+.om-in-name { font-family: 'Inter', sans-serif; font-size: 13px; }
+table.om-table input.om-in { text-align: right; }
+table.om-table td.rm { text-align: center; width: 26px; }
+.om-rm-btn { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 2px; cursor: pointer; font-size: 12px; width: 22px; height: 22px; line-height: 1; }
+.om-rm-btn:hover { color: #e08585; border-color: #e08585; }
+.om-add-item { margin-top: 8px; background: none; border: 1px dashed var(--line-soft); color: var(--muted); border-radius: 2px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; }
+.om-add-item:hover { border-color: var(--accent); color: var(--accent); }
+
+.om-margin-row { display: flex; align-items: center; gap: 8px; justify-content: flex-end; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--muted); }
+.om-margin-row input { width: 60px; }
+
+textarea.om-in { width: 100%; min-height: 90px; font-family: 'Inter', sans-serif; font-size: 13.5px; resize: vertical; }
+
+.om-approve-btn {
+  background: var(--accent);
+  color: #1b1e22;
+  border: none;
+  border-radius: 2px;
+  padding: 12px 18px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.om-approve-btn:hover { filter: brightness(1.1); }
+
+.om-pdf-btn {
+  background: transparent;
+  color: var(--blue);
+  border: 1px solid var(--blue-dim);
+  border-radius: 2px;
+  padding: 9px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.om-pdf-btn:hover { border-color: var(--blue); color: #a9c3dd; }
+</style>
+
+<div class="om-root" id="omRoot">
+  <div class="om-header">
+    <div>
+      <div class="om-eyebrow">Protótipo · orçamento automático</div>
+      <div class="om-title">ORÇA<span>METAL</span></div>
+    </div>
+    <div class="om-tag" id="omClock"></div>
+  </div>
+
+  <div class="om-grid">
+    <div class="om-panel">
+      <div class="om-section-label">Entrada</div>
+
+      <div class="om-dropzone" id="omDropzone">
+        <div class="om-corner tl"></div><div class="om-corner tr"></div>
+        <div class="om-corner bl"></div><div class="om-corner br"></div>
+        <div id="omDzContent">
+          <div class="om-dz-icon">[ + ]</div>
+          <div class="om-dz-text">Solte a foto, projeto ou PDF aqui</div>
+          <div class="om-dz-sub">ou clique para selecionar · JPG / PNG / PDF</div>
+        </div>
+        <img id="omPreview" class="om-preview" style="display:none" />
+        <div id="omFileCard" class="om-file-card" style="display:none">
+          <div class="ic">PDF</div>
+          <div class="nm" id="omFileName"></div>
+        </div>
+      </div>
+      <input type="file" id="omFileInput" class="om-input-file" accept="image/*,application/pdf" />
+
+      <textarea id="omDesc" class="om-field" placeholder="Alguma observação sobre a peça? Medidas, material, prazo desejado... (opcional)"></textarea>
+
+      <div class="om-section-label" style="margin-top:16px">Preços de referência</div>
+      <div class="om-review-hint" style="margin-bottom:8px">A IA usa estes valores em vez de estimar, quando o material bater.</div>
+      <table class="om-table" style="font-size:12px">
+        <thead><tr><th>Material</th><th class="num">R$</th><th class="num">/</th><th></th></tr></thead>
+        <tbody id="omPriceBody"></tbody>
+      </table>
+      <button class="om-add-item" onclick="omAddPriceRef()">+ adicionar preço</button>
+
+      <button class="om-btn" id="omSubmit" disabled>Gerar orçamento</button>
+      <button class="om-btn-ghost" id="omReset" style="display:none">Novo orçamento</button>
+
+      <div class="om-log" id="omLog" style="display:none"></div>
+      <div class="om-error" id="omError" style="display:none"></div>
+    </div>
+
+    <div class="om-ticket" id="omTicket">
+      <div class="om-ticket-empty" id="omEmptyState">
+        <div class="big">Aguardando peça</div>
+        <div class="small">envie um arquivo ao lado para gerar<br/>orçamento · desenho · prazo · proposta</div>
+      </div>
+      <div id="omResult" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function() {
+  const WORKER_URL = 'https://little-smoke-c6af.wesllyoliveira78.workers.dev/';
+
+  const root = document.getElementById('omRoot');
+  const dz = document.getElementById('omDropzone');
+  const dzContent = document.getElementById('omDzContent');
+  const fileInput = document.getElementById('omFileInput');
+  const preview = document.getElementById('omPreview');
+  const fileCard = document.getElementById('omFileCard');
+  const fileNameEl = document.getElementById('omFileName');
+  const descField = document.getElementById('omDesc');
+  const submitBtn = document.getElementById('omSubmit');
+  const resetBtn = document.getElementById('omReset');
+  const logEl = document.getElementById('omLog');
+  const errorEl = document.getElementById('omError');
+  const emptyState = document.getElementById('omEmptyState');
+  const resultEl = document.getElementById('omResult');
+  const clockEl = document.getElementById('omClock');
+
+  let fileData = null; // {base64, mediaType}
+  let logTimer = null;
+  let priceRefs = [{ material: 'Aço (chapa/perfil)', price: 30, unit: 'kg' }];
+
+  function renderPriceRefs() {
+    const rows = priceRefs.map((p, idx) =>
+      '<tr>' +
+        '<td><input class="om-in om-in-name" value="' + p.material.replace(/"/g,'&quot;') + '" oninput="omUpdatePriceRef(' + idx + ',\'material\',this.value)" placeholder="ex: Alumínio" /></td>' +
+        '<td class="num"><input class="om-in" type="number" step="0.01" min="0" value="' + p.price + '" oninput="omUpdatePriceRef(' + idx + ',\'price\',this.value)" style="width:60px" /></td>' +
+        '<td class="num"><select class="om-in" onchange="omUpdatePriceRef(' + idx + ',\'unit\',this.value)" style="width:52px">' +
+          ['kg','un','m','m2','hora'].map(u => '<option value="' + u + '"' + (p.unit === u ? ' selected' : '') + '>' + u + '</option>').join('') +
+        '</select></td>' +
+        '<td class="rm"><button class="om-rm-btn" onclick="omRemovePriceRef(' + idx + ')" title="remover">×</button></td>' +
+      '</tr>'
+    ).join('');
+    document.getElementById('omPriceBody').innerHTML = rows;
+  }
+
+  window.omUpdatePriceRef = function(idx, field, val) {
+    priceRefs[idx][field] = field === 'price' ? val : val;
+  };
+  window.omAddPriceRef = function() {
+    priceRefs.push({ material: '', price: 0, unit: 'kg' });
+    renderPriceRefs();
+  };
+  window.omRemovePriceRef = function(idx) {
+    priceRefs.splice(idx, 1);
+    renderPriceRefs();
+  };
+  renderPriceRefs();
+
+  function updateClock() {
+    const d = new Date();
+    clockEl.textContent = d.toLocaleDateString('pt-BR') + ' · ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  function fmtBRL(v) {
+    return (v || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+  }
+
+  function checkEnable() {
+    submitBtn.disabled = !(fileData || descField.value.trim().length > 4);
+  }
+  descField.addEventListener('input', checkEnable);
+
+  dz.addEventListener('click', () => fileInput.click());
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', e => {
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  fileInput.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) handleFile(f);
+  });
+
+  function handleFile(f) {
+    const isImage = f.type.startsWith('image/');
+    const isPdf = f.type === 'application/pdf';
+    if (!isImage && !isPdf) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Formato não suportado. Envie uma imagem (JPG/PNG) ou um PDF.';
+      return;
+    }
+    errorEl.style.display = 'none';
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      const base64 = result.split(',')[1];
+      fileData = { base64, mediaType: f.type, kind: isPdf ? 'pdf' : 'image' };
+      dzContent.style.display = 'none';
+      if (isPdf) {
+        preview.style.display = 'none';
+        fileCard.style.display = 'flex';
+        fileNameEl.textContent = f.name;
+      } else {
+        fileCard.style.display = 'none';
+        preview.src = result;
+        preview.style.display = 'block';
+      }
+      checkEnable();
+    };
+    reader.readAsDataURL(f);
+  }
+
+  const LOG_LINES = [
+    '> lendo arquivo enviado...',
+    '> identificando material e dimensões...',
+    '> calculando custo de material e mão de obra...',
+    '> montando cronograma de produção...',
+    '> redigindo proposta comercial...'
+  ];
+
+  function startLog() {
+    logEl.style.display = 'block';
+    logEl.innerHTML = '';
+    let i = 0;
+    function renderUpTo(idx) {
+      logEl.innerHTML = LOG_LINES.slice(0, idx + 1).map((l, k) => {
+        const done = k < idx;
+        return '<div class="' + (done ? 'dim' : '') + '">' + l + (k === idx ? '<span class="om-cursor"></span>' : '') + '</div>';
+      }).join('');
+    }
+    renderUpTo(0);
+    logTimer = setInterval(() => {
+      if (i < LOG_LINES.length - 1) {
+        i++;
+        renderUpTo(i);
+      }
+    }, 1100);
+  }
+
+  function finishLog(success) {
+    if (logTimer) clearInterval(logTimer);
+    logEl.innerHTML = LOG_LINES.map(l => '<div class="dim">' + l + '</div>').join('') +
+      '<div style="color:' + (success ? 'var(--accent)' : '#e08585') + '">' + (success ? '> orçamento pronto.' : '> falha na geração.') + '</div>';
+  }
+
+  function svgBox(inner) {
+    return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="2">' + inner + '</svg>';
+  }
+
+  async function chamarIA(descricao) {
+    const systemPrompt = 'Você é um orçamentista experiente de uma metalúrgica e serralheria brasileira. Você recebe uma foto, projeto, croqui e/ou descrição de uma peça e produz uma estimativa de orçamento realista para o mercado brasileiro atual.\\n\\nResponda APENAS com um objeto JSON válido, TUDO EM UMA ÚNICA LINHA (sem quebras de linha reais, nem dentro dos textos — use apenas espaços), sem markdown, sem crases, sem texto antes ou depois. Formato exato:\\n{"projectName":"string curta","description":"1 frase interpretando o que foi enviado","technicalSpecs":[{"label":"string curto ex: Material, Dimensões, Espessura, Acabamento, Fixação","value":"string curto"}],"items":[{"name":"string","qty":number,"unit":"un|kg|m|m2","unitPrice":number,"total":number}],"materialCost":number,"laborCost":number,"subtotal":number,"marginPercent":number,"total":number,"timeframeDays":number,"timeframeStages":[{"name":"string curto","days":number}],"proposalText":"proposta comercial curta e formal em português, no máximo 3 frases, sem saudação","svgSketch":"SVG interno (sem tag <svg> externa, sem <text>), no máximo 8 formas simples como line/rect/circle/polyline representando esquematicamente a peça, coordenadas dentro de viewBox 0 0 400 300"}\\n\\nSeja conciso para caber a resposta inteira em poucos tokens. No máximo 4 itens no orçamento e no máximo 5 especificações técnicas (as mais relevantes: material, dimensões/medidas, espessura, tipo de acabamento/pintura, tipo de fixação/solda, conforme o que for identificável na peça). Se o usuário informar preços de referência de materiais, use-os como unitPrice exato dos itens correspondentes — não estime por conta própria nesses casos. Valores sem referência informada são estimativas ilustrativas baseadas em preços típicos de mercado, específicas ao que foi enviado.';
+
+    const parts = [];
+    if (fileData) {
+      parts.push({ inlineData: { mimeType: fileData.kind === 'pdf' ? 'application/pdf' : fileData.mediaType, data: fileData.base64 } });
+    }
+    parts.push({ text: descricao ? ('Observações do cliente: ' + descricao) : 'Analise o arquivo enviado e gere o orçamento.' });
+
+    const validRefs = priceRefs.filter(p => p.material && p.material.trim() && parseFloat(p.price) > 0);
+    if (validRefs.length) {
+      const refText = validRefs.map(p => p.material.trim() + ': R$ ' + parseFloat(p.price).toFixed(2) + ' por ' + p.unit).join('; ');
+      parts.push({ text: 'Preços de referência informados pelo responsável — USE ESTES VALORES EXATOS quando o material/item corresponder, em vez de estimar. Para itens não cobertos por esta lista, estime normalmente pelo mercado. Referências: ' + refText });
+    }
+
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ role: 'user', parts }],
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
+      })
+    });
+
+    if (!response.ok) {
+      let bodyText = '';
+      try { bodyText = await response.text(); } catch (e) {}
+      throw new Error('Erro na chamada da API (' + response.status + '): ' + bodyText.slice(0, 300));
+    }
+    const data = await response.json();
+    if (data.error) throw new Error('API retornou erro: ' + (data.error.message || JSON.stringify(data.error)));
+    const cand = (data.candidates || [])[0];
+    const textPart = cand && cand.content && (cand.content.parts || []).find(p => p.text);
+    if (!textPart) throw new Error('Resposta sem conteúdo de texto. Bruto: ' + JSON.stringify(data).slice(0, 300));
+
+    let raw = textPart.text.trim();
+    raw = raw.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+    const start = raw.indexOf('{');
+    const end = raw.lastIndexOf('}');
+    if (start !== -1 && end !== -1 && end > start) raw = raw.substring(start, end + 1);
+    // remove quebras de linha/tabs cruas que invalidam o JSON (modelo às vezes formata "bonito")
+    const cleaned = raw.replace(/[\r\n\t]+/g, ' ');
+
+    try {
+      return JSON.parse(cleaned);
+    } catch (e1) {
+      try {
+        return JSON.parse(raw);
+      } catch (e2) {
+        const err = new Error('Não consegui interpretar o JSON da IA (' + e1.message + ').');
+        err.rawResponse = textPart.text.slice(0, 800);
+        throw err;
+      }
+    }
+  }
+
+  let reviewState = null;
+
+  function recomputeTotals() {
+    reviewState.items.forEach(it => {
+      it.total = (parseFloat(it.qty) || 0) * (parseFloat(it.unitPrice) || 0);
+    });
+    const subtotal = reviewState.items.reduce((s, it) => s + it.total, 0);
+    reviewState.subtotal = subtotal;
+    reviewState.total = subtotal * (1 + (parseFloat(reviewState.marginPercent) || 0) / 100);
+  }
+
+  function renderItemsTable() {
+    const rows = reviewState.items.map((it, idx) =>
+      '<tr>' +
+        '<td><input class="om-in om-in-name" value="' + escAttr(it.name) + '" oninput="omUpdateItem(' + idx + ',\'name\',this.value)" /></td>' +
+        '<td class="num"><input class="om-in" type="number" step="1" min="0" value="' + esc(it.qty) + '" oninput="omUpdateItem(' + idx + ',\'qty\',this.value)" style="width:56px" /> <input class="om-in" value="' + escAttr(it.unit || '') + '" oninput="omUpdateItem(' + idx + ',\'unit\',this.value)" style="width:44px" /></td>' +
+        '<td class="num"><input class="om-in" type="number" step="0.01" min="0" value="' + esc(it.unitPrice) + '" oninput="omUpdateItem(' + idx + ',\'unitPrice\',this.value)" /></td>' +
+        '<td class="num" id="om-item-total-' + idx + '">' + fmtBRL(it.total) + '</td>' +
+        '<td class="rm"><button class="om-rm-btn" onclick="omRemoveItem(' + idx + ')" title="remover">×</button></td>' +
+      '</tr>'
+    ).join('');
+    document.getElementById('om-items-body').innerHTML = rows;
+    updateTotalsDisplay();
+  }
+
+  function updateTotalsDisplay() {
+    reviewState.items.forEach((it, idx) => {
+      const cell = document.getElementById('om-item-total-' + idx);
+      if (cell) cell.textContent = fmtBRL(it.total);
+    });
+    const subEl = document.getElementById('om-subtotal-display');
+    const totEl = document.getElementById('om-total-display');
+    if (subEl) subEl.textContent = fmtBRL(reviewState.subtotal);
+    if (totEl) totEl.textContent = fmtBRL(reviewState.total);
+  }
+
+  function renderSpecsTable() {
+    const rows = (reviewState.technicalSpecs || []).map((sp, idx) =>
+      '<tr>' +
+        '<td style="width:38%"><input class="om-in om-in-name" value="' + escAttr(sp.label) + '" oninput="omUpdateSpec(' + idx + ',\'label\',this.value)" placeholder="ex: Material" /></td>' +
+        '<td><input class="om-in om-in-name" value="' + escAttr(sp.value) + '" oninput="omUpdateSpec(' + idx + ',\'value\',this.value)" placeholder="ex: Aço carbono 1020" /></td>' +
+        '<td class="rm"><button class="om-rm-btn" onclick="omRemoveSpec(' + idx + ')" title="remover">×</button></td>' +
+      '</tr>'
+    ).join('');
+    document.getElementById('om-specs-body').innerHTML = rows;
+  }
+
+  window.omUpdateSpec = function(idx, field, val) {
+    reviewState.technicalSpecs[idx][field] = val;
+  };
+
+  window.omAddSpec = function() {
+    reviewState.technicalSpecs = reviewState.technicalSpecs || [];
+    reviewState.technicalSpecs.push({ label: '', value: '' });
+    renderSpecsTable();
+  };
+
+  window.omRemoveSpec = function(idx) {
+    reviewState.technicalSpecs.splice(idx, 1);
+    renderSpecsTable();
+  };
+
+  window.omUpdateItem = function(idx, field, val) {
+    reviewState.items[idx][field] = (field === 'qty' || field === 'unitPrice') ? val : val;
+    recomputeTotals();
+    updateTotalsDisplay();
+  };
+
+  window.omAddItem = function() {
+    reviewState.items.push({ name: 'Novo item', qty: 1, unit: 'un', unitPrice: 0, total: 0 });
+    recomputeTotals();
+    renderItemsTable();
+  };
+
+  window.omRemoveItem = function(idx) {
+    reviewState.items.splice(idx, 1);
+    recomputeTotals();
+    renderItemsTable();
+  };
+
+  window.omUpdateMargin = function(val) {
+    reviewState.marginPercent = val;
+    recomputeTotals();
+    updateTotalsDisplay();
+  };
+
+  window.omUpdateField = function(field, val) {
+    reviewState[field] = val;
+  };
+
+  window.omUpdateStage = function(idx, val) {
+    reviewState.timeframeStages[idx].days = parseFloat(val) || 0;
+    reviewState.timeframeDays = reviewState.timeframeStages.reduce((s, st) => s + (parseFloat(st.days) || 0), 0);
+    const totEl = document.getElementById('om-prazo-total');
+    if (totEl) totEl.textContent = reviewState.timeframeDays;
+  };
+
+  window.omApprove = function() {
+    recomputeTotals();
+    renderFinal(reviewState);
+  };
+
+  function renderReview(r) {
+    reviewState = JSON.parse(JSON.stringify(r));
+    reviewState.items = (reviewState.items || []).map(it => ({ ...it, qty: it.qty || 1, unitPrice: it.unitPrice || 0 }));
+    reviewState.technicalSpecs = reviewState.technicalSpecs || [];
+    reviewState.marginPercent = reviewState.marginPercent || 0;
+    recomputeTotals();
+
+    const svgHtml = svgBox(reviewState.svgSketch || '');
+    const stagesInputs = (reviewState.timeframeStages || []).map((s, idx) =>
+      '<div class="om-tl-seg" style="flex:1"><div class="name">' + esc(s.name) + '</div>' +
+      '<input class="om-in" type="number" min="0" style="text-align:center;margin-top:4px" value="' + esc(s.days) + '" oninput="omUpdateStage(' + idx + ',this.value)" /></div>'
+    ).join('');
+
+    resultEl.innerHTML =
+      '<div class="om-review-banner">Revisão antes de emitir</div>' +
+      '<div class="om-review-hint">Confira e ajuste itens, preços, margem, prazo e o texto da proposta. Nada é enviado ao cliente até você aprovar.</div>' +
+      '<div class="om-ticket-project" style="margin-bottom:2px">' + esc(reviewState.projectName || 'Peça sem nome') + '</div>' +
+      '<div class="om-ticket-desc" style="margin-bottom:18px">' + esc(reviewState.description || '') + '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Desenho técnico</div>' +
+        '<div class="om-blueprint">' + svgHtml + '</div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Especificações técnicas (editável)</div>' +
+        '<table class="om-table"><thead><tr><th>Campo</th><th>Valor</th><th></th></tr></thead><tbody id="om-specs-body"></tbody></table>' +
+        '<button class="om-add-item" onclick="omAddSpec()">+ adicionar especificação</button>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Orçamento (editável)</div>' +
+        '<table class="om-table"><thead><tr><th>Item</th><th class="num">Qtd / un.</th><th class="num">Vlr. unit.</th><th class="num">Total</th><th></th></tr></thead><tbody id="om-items-body"></tbody></table>' +
+        '<button class="om-add-item" onclick="omAddItem()">+ adicionar item</button>' +
+        '<div class="om-margin-row">Margem: <input class="om-in" type="number" step="1" value="' + esc(reviewState.marginPercent) + '" oninput="omUpdateMargin(this.value)" />%</div>' +
+        '<div class="om-totals"><div>Subtotal: <span id="om-subtotal-display">' + fmtBRL(reviewState.subtotal) + '</span></div><div class="om-final" id="om-total-display">' + fmtBRL(reviewState.total) + '</div></div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Prazo (dias por etapa, editável)</div>' +
+        '<div class="om-timeline">' + stagesInputs + '</div>' +
+        '<div class="om-tl-total">Prazo total: <b id="om-prazo-total">' + esc(reviewState.timeframeDays) + '</b> dias úteis</div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Proposta comercial (editável)</div>' +
+        '<textarea class="om-in" oninput="omUpdateField(\'proposalText\',this.value)">' + esc(reviewState.proposalText || '') + '</textarea>' +
+      '</div>' +
+
+      '<button class="om-approve-btn" onclick="omApprove()">Aprovar e emitir orçamento</button>';
+
+    renderItemsTable();
+    renderSpecsTable();
+    emptyState.style.display = 'none';
+    resultEl.style.display = 'block';
+  }
+
+  function renderFinal(r) {
+    const num = 'Nº ' + Math.floor(1000 + Math.random() * 9000);
+    const svgHtml = svgBox(r.svgSketch || '');
+
+    const itemsRows = (r.items || []).map(it =>
+      '<tr><td>' + esc(it.name) + '</td><td class="num">' + esc(it.qty) + ' ' + esc(it.unit || '') + '</td><td class="num">' + fmtBRL(it.unitPrice) + '</td><td class="num">' + fmtBRL(it.total) + '</td></tr>'
+    ).join('');
+
+    const stages = (r.timeframeStages || []).map(s =>
+      '<div class="om-tl-seg" style="flex:' + Math.max(s.days, 1) + '"><div class="name">' + esc(s.name) + '</div><div class="days">' + esc(s.days) + 'd</div></div>'
+    ).join('');
+
+    const proposalParas = (r.proposalText || '').split(/\n+/).filter(Boolean).map(p => '<p>' + esc(p) + '</p>').join('');
+
+    resultEl.innerHTML =
+      '<div class="om-stamp">Orçamento<br/>gerado</div>' +
+      '<div class="om-ticket-head">' +
+        '<div>' +
+          '<div class="om-ticket-num">ORÇAMENTO ' + num + ' · ' + new Date().toLocaleDateString('pt-BR') + '</div>' +
+          '<div class="om-ticket-project">' + esc(r.projectName || 'Peça sem nome') + '</div>' +
+          '<div class="om-ticket-desc">' + esc(r.description || '') + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Desenho técnico</div>' +
+        '<div class="om-blueprint">' + svgHtml + '</div>' +
+      '</div>' +
+
+      (r.technicalSpecs && r.technicalSpecs.length ?
+      '<div class="om-block">' +
+        '<div class="om-section-label">Especificações técnicas</div>' +
+        '<table class="om-table"><tbody>' + r.technicalSpecs.map(sp => '<tr><td style="width:38%;color:var(--muted)">' + esc(sp.label) + '</td><td>' + esc(sp.value) + '</td></tr>').join('') + '</tbody></table>' +
+      '</div>' : '') +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Orçamento</div>' +
+        '<table class="om-table"><thead><tr><th>Item</th><th class="num">Qtd</th><th class="num">Vlr. unit.</th><th class="num">Total</th></tr></thead><tbody>' + itemsRows + '</tbody></table>' +
+        '<div class="om-totals">' +
+          '<div>Subtotal: ' + fmtBRL(r.subtotal) + '</div>' +
+          '<div>Margem: ' + esc(r.marginPercent) + '%</div>' +
+          '<div class="om-final">' + fmtBRL(r.total) + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Prazo</div>' +
+        '<div class="om-timeline">' + stages + '</div>' +
+        '<div class="om-tl-total">Prazo total: <b>' + esc(r.timeframeDays) + ' dias úteis</b></div>' +
+      '</div>' +
+
+      '<div class="om-block">' +
+        '<div class="om-section-label">Proposta comercial</div>' +
+        '<div class="om-proposal">' + proposalParas + '</div>' +
+      '</div>' +
+
+      '<div class="om-footnote">Revisado e aprovado manualmente antes da emissão · valores conferidos pelo responsável.</div>' +
+      '<button class="om-pdf-btn" onclick="omBaixarPDF()">Baixar proposta em PDF</button>';
+
+    window.omFinalData = r;
+    window.omFinalNum = num;
+    emptyState.style.display = 'none';
+    resultEl.style.display = 'block';
+  }
+
+  window.omBaixarPDF = function() {
+    if (!window.jspdf) { alert('Biblioteca de PDF ainda carregando, tente novamente em instantes.'); return; }
+    const r = window.omFinalData;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const marginL = 14, pageW = 210, maxW = pageW - marginL * 2;
+    let y = 20;
+    function ensure(space) { if (y + space > 280) { doc.addPage(); y = 20; } }
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+    doc.text('Orçamento ' + (window.omFinalNum || ''), marginL, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    doc.text('Data: ' + new Date().toLocaleDateString('pt-BR'), marginL, y); y += 8;
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+    doc.text(r.projectName || '', marginL, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+    const descLines = doc.splitTextToSize(r.description || '', maxW);
+    ensure(descLines.length * 5 + 6);
+    doc.text(descLines, marginL, y); y += descLines.length * 5 + 8;
+
+    if (r.technicalSpecs && r.technicalSpecs.length) {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+      ensure(10); doc.text('Especificações técnicas', marginL, y); y += 7;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+      r.technicalSpecs.forEach(sp => {
+        const line = '- ' + sp.label + ': ' + sp.value;
+        const wrapped = doc.splitTextToSize(line, maxW);
+        ensure(wrapped.length * 5.2);
+        doc.text(wrapped, marginL, y); y += wrapped.length * 5.2;
+      });
+      y += 4;
+    }
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+    ensure(10); doc.text('Itens do orçamento', marginL, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    (r.items || []).forEach(it => {
+      const line = '- ' + it.name + '   ' + it.qty + ' ' + (it.unit || '') + '   x ' + fmtBRL(it.unitPrice) + '   = ' + fmtBRL(it.total);
+      const wrapped = doc.splitTextToSize(line, maxW);
+      ensure(wrapped.length * 5.2 + 2);
+      doc.text(wrapped, marginL, y); y += wrapped.length * 5.2 + 2;
+    });
+    y += 4;
+    ensure(16);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+    doc.text('Subtotal: ' + fmtBRL(r.subtotal) + '   |   Margem: ' + (r.marginPercent || 0) + '%', marginL, y); y += 7;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+    doc.text('Total: ' + fmtBRL(r.total), marginL, y); y += 11;
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+    ensure(10); doc.text('Prazo: ' + r.timeframeDays + ' dias úteis', marginL, y); y += 8;
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+    ensure(10); doc.text('Proposta comercial', marginL, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+    const propLines = doc.splitTextToSize(r.proposalText || '', maxW);
+    ensure(propLines.length * 5.2);
+    doc.text(propLines, marginL, y); y += propLines.length * 5.2;
+
+    const slug = (r.projectName || 'peca').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    doc.save('orcamento-' + slug + '.pdf');
+  };
+
+  function escAttr(v) {
+    return esc(v).replace(/"/g, '&quot;');
+  }
+
+  function esc(v) {
+    return String(v === undefined || v === null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    errorEl.style.display = 'none';
+    submitBtn.disabled = true;
+    resetBtn.style.display = 'none';
+    resultEl.style.display = 'none';
+    emptyState.style.display = 'flex';
+    startLog();
+
+    try {
+      const r = await chamarIA(descField.value.trim());
+      finishLog(true);
+      setTimeout(() => renderReview(r), 300);
+    } catch (e) {
+      finishLog(false);
+      errorEl.style.display = 'block';
+      let msg = 'Não foi possível gerar o orçamento: ' + e.message + '. Tente novamente.';
+      if (e.rawResponse) msg += '\n\n[debug] resposta bruta da IA:\n' + e.rawResponse;
+      errorEl.textContent = msg;
+      errorEl.style.whiteSpace = 'pre-wrap';
+    } finally {
+      resetBtn.style.display = 'block';
+      submitBtn.disabled = false;
+      checkEnable();
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    fileData = null;
+    reviewState = null;
+    fileInput.value = '';
+    preview.style.display = 'none';
+    fileCard.style.display = 'none';
+    dzContent.style.display = 'block';
+    descField.value = '';
+    logEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    resultEl.style.display = 'none';
+    emptyState.style.display = 'flex';
+    resetBtn.style.display = 'none';
+    checkEnable();
+  });
+})();
+</script>
