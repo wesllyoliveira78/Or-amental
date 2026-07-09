@@ -605,7 +605,7 @@ textarea.om-in { width: 100%; min-height: 90px; font-family: 'Inter', sans-serif
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemPrompt }] },
         contents: [{ role: 'user', parts }],
-        generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.4, thinkingConfig: { thinkingBudget: 0 } }
       })
     });
 
@@ -617,6 +617,9 @@ textarea.om-in { width: 100%; min-height: 90px; font-family: 'Inter', sans-serif
     const data = await response.json();
     if (data.error) throw new Error('API retornou erro: ' + (data.error.message || JSON.stringify(data.error)));
     const cand = (data.candidates || [])[0];
+    if (cand && cand.finishReason === 'MAX_TOKENS') {
+      throw new Error('A IA cortou a resposta por exceder o limite de tokens. Tente novamente ou descreva a peça de forma mais simples.');
+    }
     const textPart = cand && cand.content && (cand.content.parts || []).find(p => p.text);
     if (!textPart) throw new Error('Resposta sem conteúdo de texto. Bruto: ' + JSON.stringify(data).slice(0, 300));
 
