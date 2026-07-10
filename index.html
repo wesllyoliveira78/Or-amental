@@ -380,13 +380,202 @@ textarea.om-in { width: 100%; min-height: 90px; font-family: 'Inter', sans-serif
   margin-top: 16px;
 }
 .om-pdf-btn:hover { border-color: var(--blue); color: #a9c3dd; }
+
+/* ---- nav ---- */
+.om-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(27,30,34,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+.om-nav-brand {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.om-nav-brand span { color: var(--accent); }
+.om-nav-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  padding: 8px 14px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+.om-nav-cta:hover { background: rgba(255,106,31,0.08); }
+
+/* ---- hero ---- */
+.om-hero {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 20px 56px;
+  text-align: center;
+}
+.om-hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.om-hero h1 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0 0 18px;
+}
+.om-hero h1 span { color: var(--accent); }
+.om-hero p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 0 auto 30px;
+}
+@media (max-width: 640px) {
+  .om-hero h1 { font-size: 30px; }
+}
+
+.om-hero-cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #1b1e22;
+  border: none;
+  border-radius: 2px;
+  padding: 15px 30px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+}
+.om-hero-cta:hover { filter: brightness(1.1); }
+
+.om-stat-row {
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+  margin-top: 38px;
+  flex-wrap: wrap;
+}
+.om-stat { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.om-stat b { display: block; font-family: 'Oswald', sans-serif; font-size: 22px; color: var(--text); text-transform: none; letter-spacing: 0; margin-bottom: 2px; }
+
+/* ---- how it works ---- */
+.om-steps-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.om-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+@media (max-width: 780px) { .om-steps { grid-template-columns: 1fr; } }
+.om-step {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 3px;
+  padding: 24px 20px 20px;
+}
+.om-step .om-corner { border-color: var(--line-soft); }
+.om-step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.om-step h3 {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  font-size: 16.5px;
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+}
+.om-step p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* ---- footer ---- */
+.om-site-footer {
+  max-width: 1120px;
+  margin: 40px auto 0;
+  padding: 22px 20px 40px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.om-site-footer b { color: var(--text); font-family: 'Oswald', sans-serif; letter-spacing: 0.02em; }
 </style>
 
 <div class="om-root" id="omRoot">
-  <div class="om-header">
+  <div class="om-nav">
+    <div class="om-nav-brand">ORÇA<span>METAL</span></div>
+    <a href="#ferramenta" class="om-nav-cta">Gerar orçamento ↓</a>
+  </div>
+
+  <div class="om-hero">
+    <div class="om-hero-eyebrow">Orçamento inteligente para metalúrgicas e serralherias</div>
+    <h1>Do croqui ao orçamento<br/>pronto em <span>menos de um minuto</span>.</h1>
+    <p>Envie uma foto, projeto ou PDF da peça. A IA identifica material, monta os itens, o prazo e a proposta comercial — você só revisa os preços e aprova antes de enviar ao cliente.</p>
+    <a href="#ferramenta" class="om-hero-cta">Gerar orçamento agora</a>
+    <div class="om-stat-row">
+      <div class="om-stat"><b>&lt; 1 min</b>para o rascunho</div>
+      <div class="om-stat"><b>100%</b>revisado por você</div>
+      <div class="om-stat"><b>0</b>cadastro necessário</div>
+    </div>
+  </div>
+
+  <div class="om-steps-wrap">
+    <div class="om-steps">
+      <div class="om-step">
+        <div class="om-step-num">01</div>
+        <h3>Envie a peça</h3>
+        <p>Foto, projeto, croqui digitalizado ou PDF — a IA lê o arquivo e entende o que precisa ser fabricado.</p>
+      </div>
+      <div class="om-step">
+        <div class="om-step-num">02</div>
+        <h3>IA monta o rascunho</h3>
+        <p>Especificações técnicas, itens de material e mão de obra, cronograma e uma proposta comercial, tudo gerado automaticamente.</p>
+      </div>
+      <div class="om-step">
+        <div class="om-step-num">03</div>
+        <h3>Você revisa e aprova</h3>
+        <p>Ajusta preços, margem e prazo com seus próprios números antes de emitir — o orçamento final só sai depois da sua aprovação.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="om-header" id="ferramenta">
     <div>
-      <div class="om-eyebrow">Protótipo · orçamento automático</div>
-      <div class="om-title">ORÇA<span>METAL</span></div>
+      <div class="om-eyebrow">Bancada de orçamento</div>
+      <div class="om-title">Gerar novo <span>orçamento</span></div>
     </div>
     <div class="om-tag" id="omClock"></div>
   </div>
@@ -435,6 +624,11 @@ textarea.om-in { width: 100%; min-height: 90px; font-family: 'Inter', sans-serif
       </div>
       <div id="omResult" style="display:none"></div>
     </div>
+  </div>
+
+  <div class="om-site-footer">
+    <div><b>ORÇAMETAL</b> — orçamento automático para metalúrgicas e serralherias.</div>
+    <div>Valores gerados por IA · sempre revisados por um responsável antes do envio ao cliente.</div>
   </div>
 </div>
 
